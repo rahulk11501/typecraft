@@ -3,7 +3,9 @@
 one:
   title: MyString
   description: MyString
+  group: one
 
 two:
   title: MyString
   description: MyString
+  group: two

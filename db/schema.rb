@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_22_051733) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_22_074637) do
+  create_table "groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
@@ -25,6 +31,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_051733) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "group_id"
+    t.index ["group_id"], name: "index_tasks_on_group_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -32,8 +40,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_051733) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "group_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["group_id"], name: "index_users_on_group_id"
   end
 
   add_foreign_key "sessions", "users"
+  add_foreign_key "tasks", "groups"
+  add_foreign_key "users", "groups"
 end
