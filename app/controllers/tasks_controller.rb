@@ -4,7 +4,11 @@ class TasksController < ApplicationController
 
   # GET /tasks or /tasks.json
   def index
-    @tasks = Current.user.group.tasks
+    if Current.user
+      @tasks = Current.user.group.tasks
+    else
+      @tasks = Task.none
+    end
   end
 
   # GET /tasks/1 or /tasks/1.json
