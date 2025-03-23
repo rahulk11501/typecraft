@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "messages/create"
   resources :tasks
   resource :session
   resources :passwords, param: :token
@@ -14,4 +15,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "tasks#index"
+
+  post "messages/create" => "messages#create"
 end

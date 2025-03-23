@@ -1,10 +1,51 @@
-<p style="color: green"><%= notice %></p>
+<% if notice.present? %>
+  <p class="py-2 px-3 bg-green-900 mb-5 text-green-300 font-medium rounded-lg inline-block" id="notice">
+    <%= notice %>
+  </p>
+<% end %>
 
-<%= render @task %>
+<h3 class="text-4xl font-extrabold my-4 text-gray-100">Task</h3>
+<div class="md:w-2/3 w-full flex">
+  <div class="bg-gray-800 shadow rounded-lg px-5 py-3 my-4">
+    <h1 class="font-bold text-2xl my-4 text-gray-100">
+      <%= @task.title %>
+    </h1>
 
-<div>
-  <%= link_to "Edit this task", edit_task_path(@task) %> |
-  <%= link_to "Back to tasks", tasks_path %>
+    <p class="my-4 text-gray-300">
+      <%= @task.description %>
+    </p>
 
-  <%= button_to "Destroy this task", @task, method: :delete %>
+    <%= link_to "Edit this task", edit_task_path(@task), class: "mt-2 rounded-lg py-3 px-5 bg-gray-700 text-gray-100 inline-block font-medium hover:bg-gray-600" %>
+    <%= link_to "Back to tasks", tasks_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-700 text-gray-100 inline-block font-medium hover:bg-gray-600" %>
+    <div class="inline-block ml-2">
+      <%= button_to "Destroy this task", @task, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-red-700 text-gray-100 font-medium hover:bg-red-600" %>
+    </div>
+  </div>
 </div>
+
+<h3 class="text-4xl font-extrabold my-4 text-gray-100">Messages</h3>
+<% puts @task.title, @task.id, @task.messages.count %>
+<% unless @task.messages.empty? %>
+  <div class="bg-gray-800 shadow rounded-lg px-5 py-3 my-4 mt-8">
+    <div class="space-y-4 max-h-96 my-4 overflow-y-auto">
+      <div id="messages">
+        <%= turbo_stream_from @task, "messages" %>
+        <%= render @task.messages %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= form_with model: [@task, Message.new], url: messages_create_path ,class: "mt-4", data: { controller: "reset-form", action: "turbo:submit-end->reset-form#reset" } do |f| %>
+  <div class="flex gap-4">
+    <%= hidden_field_tag :task_id, @task.id %>
+    <%= f.text_area :content,
+                    class: "flex-1 min-h-[80px] rounded-lg border-gray-600 bg-gray-700 text-gray-100 shadow-sm focus:border-indigo-400 focus:ring-indigo-400",
+                    placeholder: "Type your message..."
+    %>
+
+    <%= f.submit "Send",
+                 class: "rounded-lg py-3 px-5 bg-blue-700 text-white inline-block font-medium cursor-pointer hover:bg-blue-600"
+    %>
+  </div>
+<% end %>
