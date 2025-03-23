@@ -36,7 +36,7 @@
   </div>
 <% end %>
 
-<%= form_with model: [@task, Message.new], url: messages_create_path ,class: "mt-4", data: { controller: "reset-form", action: "turbo:submit-end->reset-form#reset" } do |f| %>
+<%= form_with model: [@task, Message.new], url: messages_create_path ,class: "mt-4" do |f| %>
   <div class="flex gap-4">
     <%= hidden_field_tag :task_id, @task.id %>
     <%= f.text_area :content,
